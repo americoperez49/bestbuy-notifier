@@ -57,8 +57,8 @@ async function checkWebsite() {
         await sendDiscordAlert(message)
       } else {
         console.log('Button data-test-id is "coming-soon". No alert sent.')
-        const message = `'Button data-test-id is "coming-soon".`
-        await sendDiscordAlert(message)
+        // const message = `'Button data-test-id is "coming-soon".`
+        // await sendDiscordAlert(message)
       }
     } else {
       console.log("No button with data-test-id found on the page.")
