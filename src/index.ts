@@ -37,7 +37,20 @@ async function checkWebsite() {
   console.log(`Checking website: ${WEBSITE_URL}`)
   let browser
   try {
-    browser = await puppeteer.launch({ headless: false })
+    browser = await puppeteer.launch({
+      headless: false, // Keep false for virtual display
+      executablePath: process.env.CHROME_BIN,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--no-zygote",
+        "--single-process", // This might be useful for smaller containers
+        "--disable-gpu",
+      ],
+    })
     const page = await browser.newPage()
     await page.goto(WEBSITE_URL, { waitUntil: "networkidle2" })
     await new Promise((resolve) => setTimeout(resolve, 10000)) // Wait for 10 seconds
@@ -57,8 +70,6 @@ async function checkWebsite() {
         await sendDiscordAlert(message)
       } else {
         console.log('Button data-test-id is "coming-soon". No alert sent.')
-        const message = `'Button data-test-id is "coming-soon".`
-        await sendDiscordAlert(message)
       }
     } else {
       console.log("No button with data-test-id found on the page.")
